@@ -6553,21 +6553,19 @@ class DataFrame:
                 raise
         return self
 
-    def drop(
+    def drop(  # noqa: D417
         self,
-        columns: ColumnNameOrSelector | Collection[ColumnNameOrSelector] | None = None,
-        *more_columns: ColumnNameOrSelector,
+        *columns: ColumnNameOrSelector | Iterable[ColumnNameOrSelector],
+        **kwargs: Any,
     ) -> DataFrame:
         """
         Remove columns from the dataframe.
 
         Parameters
         ----------
-        columns
-            Names of the columns that should be removed from the dataframe, or
-            a selector that determines the columns to drop.
-        *more_columns
-            Additional columns to drop, specified as positional arguments.
+        *columns
+            Names of the columns that should be removed from the dataframe.
+            Accepts column selector input.
 
         Examples
         --------
@@ -6635,7 +6633,14 @@ class DataFrame:
         │ 8.0 │
         └─────┘
         """
-        return self.lazy().drop(columns, *more_columns).collect(_eager=True)
+        if (col := kwargs.get("columns")) is not None:
+            issue_deprecation_warning(
+                "Passing `columns` as a keyword argument to `drop` is deprecated."
+                " Use positional syntax instead.",
+                version="0.20.4",
+            )
+            columns = (col, *columns)
+        return self.lazy().drop(*columns).collect(_eager=True)
 
     def drop_in_place(self, name: str) -> Series:
         """
