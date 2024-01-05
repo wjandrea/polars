@@ -119,3 +119,9 @@ def test_drop_nan_ignore_null_3525() -> None:
         3.0,
         4.0,
     ]
+
+
+def test_drop_without_parameters() -> None:
+    df = pl.DataFrame({"a": [1, 2]})
+    assert_frame_equal(df.drop(), df)
+    assert_frame_equal(df.lazy().drop(*[]), df.lazy())

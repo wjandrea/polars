@@ -6555,7 +6555,7 @@ class DataFrame:
 
     def drop(
         self,
-        columns: ColumnNameOrSelector | Collection[ColumnNameOrSelector],
+        columns: ColumnNameOrSelector | Collection[ColumnNameOrSelector] | None = None,
         *more_columns: ColumnNameOrSelector,
     ) -> DataFrame:
         """

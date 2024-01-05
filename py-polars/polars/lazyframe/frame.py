@@ -4097,7 +4097,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
 
     def drop(
         self,
-        columns: ColumnNameOrSelector | Collection[ColumnNameOrSelector],
+        columns: ColumnNameOrSelector | Collection[ColumnNameOrSelector] | None = None,
         *more_columns: ColumnNameOrSelector,
     ) -> Self:
         """
@@ -4162,6 +4162,8 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         │ 8.0 │
         └─────┘
         """
+        if columns is None:
+            columns = []
         drop_cols = _expand_selectors(self, columns, *more_columns)
         return self._from_pyldf(self._ldf.drop(drop_cols))
 
